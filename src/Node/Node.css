@@ -1,0 +1,14 @@
+.node {
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    outline: 1px solid rgb(154, 154, 154);
+}
+
+.node-snake {
+    background-color: green;
+}
+
+.node-food {
+    background-color: orange;
+}
