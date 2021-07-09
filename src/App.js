@@ -1,72 +1,60 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
-import Node from './Node/Node.jsx';
-import React, { Component } from 'react';
 
-const ROWS = 20;
-const COLS = 20;
+const BOARD_SIZE = 27;
+const STARTING_SNAKE_ROW = 9;
+const STARTING_SNAKE_COL = 9;
+const STARTING_FOOD_ROW = 9;
+const STARTING_FOOD_COL = 18;
 
-export default class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-        grid: [],
-    };
-  }
-  render() {
+export default function Board() {
+    const [board,setBoard] = useState(createBoard());
     return (
-        <div>
-          <div className="centerGrid">
-            {this.setGrid()}
-          </div>
-        </div>
-    );
-  }
-  setGrid() {
-    return (
-      this.state.grid.map((row) => {
-        return (
-           <div>
-             {row.map((node)=>{
-               const {isSnakeNode,isFoodNode,row,col} = node;
-               return (
-                   <Node
-                    isSnakeNode={isSnakeNode}
-                    isFoodNode={isFoodNode}
-                    row={row}
-                    col={col}>
-                   </Node>
-               );
-             })}
-           </div>
-        );
+        <div className="board">
+            {
+      board.map((row)=>{
+          return (
+              <div>
+                  {
+                      row.map((cell)=> {
+                          return (
+                               <div className={getClassName(cell)}>
+                                </div>
+                          );
+                      }
+                      )
+                  }
+              </div>
+          )
       })
-    );
-  }
-  componentDidMount() {
-    const board = [];
-    for(let r=0;r<ROWS;r++) {
-      const row  = [];
-      for(let c=0;c<COLS;c++) {
-         row.push(this.createNode(r,c));
-      }
-      board.push(row);
     }
-    this.setState({grid:board});
-  }
-  createNode(r,c) {
-   const node = {
-      isSnakeNode: this.checkIfSnakeNode(r,c) ? true : false,
-      isFoodNode: this.checkIfFoodNode(r,c) ? true : false,
-      row: r,
-      col: c,
-   }
-   return node;
-  }
-  checkIfFoodNode(r,c) {
-    return r == 5 && c == 16;
-  }
-  checkIfSnakeNode(r,c) {
-    return r == 5 && c == 3;
-  }
+      </div>
+    );
 }
+
+function createBoard() {
+    const board = [];
+    for(let r=0;r<BOARD_SIZE;r++) {
+        const row = [];
+        for(let c=0;c<BOARD_SIZE;c++) {
+            const cell = {
+                row: r,
+                col: c,
+                isSnakeCell: r == STARTING_SNAKE_ROW && c == STARTING_SNAKE_COL,
+                isFoodCell: r == STARTING_FOOD_ROW && c == STARTING_FOOD_COL,
+            };
+            row.push(cell);
+        }
+        board.push(row);
+    }
+    return board;
+}
+
+function getClassName(cell) {
+    // alert(cell.col);
+    if(cell.isSnakeCell) return 'cell snake-cell';
+    else if(cell.isFoodCell) {
+        return 'cell food-cell';
+    }
+    return 'cell';
+} 

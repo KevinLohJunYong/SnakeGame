@@ -1,8 +1,21 @@
-.centerGrid {
-  margin: 0;
+.board {
   position: absolute;
   top: 50%;
   left: 50%;
-  -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+.cell {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  outline: 1px solid rgb(175, 216, 248);
+}
+
+.snake-cell {
+  background-color: green;
+}
+
+.food-cell {
+  background-color: orange;
 }
