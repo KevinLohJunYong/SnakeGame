@@ -5,7 +5,7 @@ const BOARD_SIZE = 27;
 const STARTING_SNAKE_ROW = 9;
 const STARTING_SNAKE_COL = 9;
 const STARTING_FOOD_ROW = 9;
-const STARTING_FOOD_COL = 18;
+const STARTING_FOOD_COL = 10;
 
 class SnakeNode {
    constructor(row,col) {
@@ -13,6 +13,15 @@ class SnakeNode {
        this.col = col;
        this.prev = null;
        this.next = null;
+   }
+   toString = () => {
+       var string = "snake node: ";
+       var pointer = this;
+       while(pointer != null) {
+           string += pointer.col + ",";
+           pointer = pointer.prev;
+       }
+       return string;
    }
 }
 class Snake {
@@ -22,14 +31,14 @@ class Snake {
         this.tail = snakeNode;
     }
     toString = () => {
-       var string = "";
-       var curr = this;
-       while(curr != null && curr.head != null) {
-           string += curr.head.col + ",";
-           curr = curr.tail;
-       }
-       return string;
-    };
+      var string = "";
+      var pointer = this.head;
+      while(pointer != null) {
+          string += pointer.col + ",";
+          pointer = pointer.prev;
+      }
+      return string;
+    }; 
 }
 const Direction = {
     UP: 'UP',
@@ -53,23 +62,24 @@ export default function Board() {
    const growSnake = () => {
        const newSnake = snake;
        if(direction == Direction.RIGHT) {
-           const new_tail = new SnakeNode(newSnake.tail.row,newSnake.tail.col-1);
+           const new_tail = new SnakeNode(newSnake.tail.row,newSnake.tail.col);
            newSnake.tail.prev = new_tail;
-           new_tail.next = newSnake.tail;
            newSnake.tail = new_tail;
+           //alert(newSnake.tail == newSnake.head); //false
            const newSnakeCells = new Set(snakeCells);
            // alert(convertToId(new_tail.row,new_tail.col));
-           newSnakeCells.add(convertToId(new_tail.row,new_tail.col-1));
+           newSnakeCells.add(convertToId(new_tail.row,new_tail.col));
            setSnakeCells(newSnakeCells);
            setSnake(newSnake);
        }
-       //alert(newSnake.toString());
+       // alert(newSnake.toString());
    }
    const moveSnake = () => {
      const currHeadRow = snake.head.row;
      const currHeadCol = snake.head.col;
      var nextHeadRow = currHeadRow;
      var nextHeadCol = currHeadCol;
+     //if direction is right, incr col by 1
      if(direction == Direction.RIGHT) {
          nextHeadCol++;
          if(nextHeadCol == BOARD_SIZE) {
@@ -85,24 +95,33 @@ export default function Board() {
         = false;
      }
      */
+    //the snake moves every time, so clear board of previous green nodes 
      for(let r=0;r<BOARD_SIZE;r++) {
          for(let c=0;c<BOARD_SIZE;c++) {
              newBoard[r][c].isSnakeCell = false;
          }
      }
+     // moving the snake to the next direction
      // alert(snake.toString());
      const newSnake = new Snake(nextHeadRow,nextHeadCol);
-     var newSnakeNode = newSnake.head;
+     var currSnakeNode = newSnake.head;
      var previousSnakeNode = snake.head;
+     //if(previousSnakeNode.prev != null) alert(previousSnakeNode.prev.toString());
      while(previousSnakeNode.prev != null) {
-         newSnakeNode.prev = previousSnakeNode;
-         previousSnakeNode.next = newSnakeNode;
+         currSnakeNode.prev = new SnakeNode(previousSnakeNode.row,previousSnakeNode.col);
          previousSnakeNode = previousSnakeNode.prev;
-         newSnakeNode = newSnakeNode.prev;
+         currSnakeNode = currSnakeNode.prev;
      }
+     // based on snake, add the snake cells
      // alert(nextHeadCol);
      // alert(nextHeadRow);
-     newSnake.tail = newSnakeNode;
+     /*
+     var cheat = new SnakeNode(nextHeadRow,nextHeadCol-1);
+     newSnakeNode.prev = cheat;
+     cheat.next = newSnakeNode;
+     newSnake.tail = cheat;
+     */
+     // alert(newSnake.toString());
      var newSnakePointer = newSnake.head;
      const newSnakeCells = new Set();
      while(newSnakePointer != null) {
@@ -119,6 +138,7 @@ export default function Board() {
      // alert(newSnake.head.row);
      if(board[nextHeadRow][nextHeadCol].isFoodCell) {
          growSnake();
+         // alert('grow snake');
          newBoard[nextHeadRow][nextHeadCol].isFoodCell = false;
          for(const snakeCell of snakeCells) {
           //alert(Math.floor(snakeCell / BOARD_SIZE));
@@ -126,6 +146,11 @@ export default function Board() {
          newBoard[Math.floor(snakeCell / BOARD_SIZE)][snakeCell % BOARD_SIZE].isSnakeCell 
            = true;
         }
+        // alert(newSnake.toString());
+        setBoard(newBoard);
+        // setSnake(newSnake);
+        setSnakeCells(newSnakeCells);
+        return;
      }
      setBoard(newBoard);
      setSnake(newSnake);
