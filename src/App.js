@@ -5,7 +5,7 @@ const BOARD_SIZE = 27;
 const STARTING_SNAKE_ROW = 9;
 const STARTING_SNAKE_COL = 9;
 const STARTING_FOOD_ROW = 9;
-const STARTING_FOOD_COL = 10;
+const STARTING_FOOD_COL = 18;
 
 class SnakeNode {
    constructor(row,col) {
@@ -52,6 +52,7 @@ export default function Board() {
     var [snake,setSnake] = useState(new Snake(STARTING_SNAKE_ROW,STARTING_SNAKE_COL));
     const [snakeCells,setSnakeCells] = useState(new Set([STARTING_SNAKE_ROW*BOARD_SIZE+STARTING_SNAKE_COL]));
     const [direction,setDirection] = useState(Direction.RIGHT);
+    const [score,setScore] = useState(0);
     //to implement useEffect
    useInterval(() => {
      moveSnake();
@@ -59,6 +60,17 @@ export default function Board() {
    const convertToId = (row,col) => {
       return row * BOARD_SIZE + col;
    } 
+   const randomlySpawnFoodCell = () => {
+      while (true) {
+        const randomnlyGeneratedRow = randomIntFromInterval(0,BOARD_SIZE-1);
+        const randomnlyGeneratedCol = randomIntFromInterval(0,BOARD_SIZE-1);
+        const iDOfRandomlyGenFoodCell = convertToId(randomnlyGeneratedRow,randomnlyGeneratedCol);
+        if(!snakeCells.has(iDOfRandomlyGenFoodCell)) {
+              board[randomnlyGeneratedRow][randomnlyGeneratedCol].isFoodCell = true;
+              break;
+        }
+      }
+   }
    const growSnake = () => {
        const newSnake = snake;
        if(direction == Direction.RIGHT) {
@@ -74,19 +86,62 @@ export default function Board() {
        }
        // alert(newSnake.toString());
    }
+   const changeDirectionOptionally = () => {
+     document.onkeydown = function (event) {
+        switch (event.keyCode) {
+           case 37:
+              setDirection(Direction.LEFT);
+              break;
+           case 38:
+              setDirection(Direction.UP);
+              break;
+           case 39:
+             setDirection(Direction.RIGHT);
+              break;
+           case 40:
+             setDirection(Direction.DOWN);
+              break;
+        }
+     };
+   }
+   const handleGameOver = () => {
+        setScore(0);
+   }
    const moveSnake = () => {
      const currHeadRow = snake.head.row;
      const currHeadCol = snake.head.col;
      var nextHeadRow = currHeadRow;
      var nextHeadCol = currHeadCol;
+     changeDirectionOptionally();
      //if direction is right, incr col by 1
      if(direction == Direction.RIGHT) {
          nextHeadCol++;
          if(nextHeadCol == BOARD_SIZE) {
-             // handleGameOver();
+             handleGameOver();
              return;
          }
      }
+     if(direction == Direction.LEFT) {
+        nextHeadCol--;
+        if(nextHeadCol < 0) {
+            handleGameOver();
+            return;
+        }
+    }
+    if(direction == Direction.UP) {
+        nextHeadRow--;
+        if(nextHeadRow < 0) {
+            handleGameOver();
+            return;
+        }
+    }
+    if(direction == Direction.DOWN) {
+        nextHeadRow++;
+        if(nextHeadRow == BOARD_SIZE) {
+            handleGameOver();
+            return;
+        }
+    }
      const newBoard = board.slice();
      /*
      for(const snakeCell of snakeCells) {
@@ -137,6 +192,7 @@ export default function Board() {
      }
      // alert(newSnake.head.row);
      if(board[nextHeadRow][nextHeadCol].isFoodCell) {
+         setScore(score+1);
          growSnake();
          // alert('grow snake');
          newBoard[nextHeadRow][nextHeadCol].isFoodCell = false;
@@ -158,6 +214,10 @@ export default function Board() {
    };
 
     return ( 
+        <div>
+            <div className="score-header">
+                <h1> Score : {score} </h1>
+            </div>
         <div className="board">
             {
       board.map((row)=>{
@@ -176,6 +236,7 @@ export default function Board() {
           )
       })
     }
+      </div>
       </div>
     );
 }
@@ -196,6 +257,11 @@ function createBoard() {
     }
     return board;
 }
+// Copied from https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
+function randomIntFromInterval(min, max) {
+    // min and max included
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
 // Copied from https://overreacted.io/making-setinterval-declarative-with-react-hooks/
 function useInterval(callback, delay) {
     const savedCallback = useRef();

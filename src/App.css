@@ -1,10 +1,12 @@
+.score-header {
+  text-align: center;
+}
 .board {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
 .cell {
   display: inline-block;
   height: 20px;
