@@ -1,11 +1,12 @@
 import React, { useState,useEffect,useRef } from 'react';
+import Button from '@material-ui/core/Button';
 import './App.css';
 
-const BOARD_SIZE = 27;
-const STARTING_SNAKE_ROW = 9;
-const STARTING_SNAKE_COL = 9;
-const STARTING_FOOD_ROW = 9;
-const STARTING_FOOD_COL = 18;
+const BOARD_SIZE = 15;
+const STARTING_SNAKE_ROW = 3;
+const STARTING_SNAKE_COL = 3;
+const STARTING_FOOD_ROW = 3;
+const STARTING_FOOD_COL = 12;
 
 class SnakeNode {
    constructor(row,col) {
@@ -53,6 +54,7 @@ export default function Board() {
     const [snakeCells,setSnakeCells] = useState(new Set([STARTING_SNAKE_ROW*BOARD_SIZE+STARTING_SNAKE_COL]));
     const [direction,setDirection] = useState(Direction.RIGHT);
     const [score,setScore] = useState(0);
+    const [gameState,setGameState] = useState("RUNNING");
     //to implement useEffect
    useInterval(() => {
      moveSnake();
@@ -73,16 +75,33 @@ export default function Board() {
    }
    const growSnake = () => {
        const newSnake = snake;
-       const new_tail = new SnakeNode(newSnake.tail.row,newSnake.tail.col);
-       newSnake.tail.prev = new_tail;
-       newSnake.tail = new_tail;
-        //alert(newSnake.tail == newSnake.head); //false
-        const newSnakeCells = new Set(snakeCells);
-        // alert(convertToId(new_tail.row,new_tail.col));
-        newSnakeCells.add(convertToId(new_tail.row,new_tail.col));
-        setSnakeCells(newSnakeCells);
-        setSnake(newSnake);
-        // alert(newSnake.toString());
+       const currTail = newSnake.tail;
+       var newTail = null;
+       if(direction == Direction.UP) {
+          newTail = new SnakeNode(currTail.row+1,currTail.col);
+       }
+       else if(direction == Direction.DOWN) {
+          newTail = new SnakeNode(currTail.row-1,currTail.col);
+       }
+       else if(direction == Direction.LEFT) {
+          newTail = new SnakeNode(currTail.row,currTail.col+1);
+       }
+       else {
+          newTail = new SnakeNode(currTail.row,currTail.col+1);
+       }
+       const newTailId = convertToId(newTail.row,newTail.col);
+       const newSnakeCells = new Set(snakeCells);
+       newSnakeCells.add(newTailId);
+       setSnakeCells(newSnakeCells);
+       currTail.prev = newTail;
+       newSnake.tail = null;
+       newSnake.tail = newTail;
+       // alert(newSnake.tail);
+       // alert(newSnake.tail.toString());
+       setSnake(newSnake);
+   }
+   const snakeAteItself = (nextHeadRow,nextHeadCol) => {
+      
    }
    const changeDirectionOptionally = () => {
      document.onkeydown = function (event) {
@@ -102,10 +121,31 @@ export default function Board() {
         }
      };
    }
-   const handleGameOver = () => {
-        setScore(0);
+   const togglePauseButton = () => {
+       var isRunning = gameState == "RUNNING";
+       if(isRunning) {
+           isRunning = false;
+           setGameState("PAUSED");
+       } 
+       else {
+           setGameState("RUNNING");
+       }
+       document.getElementById("pause-button").innerHTML = isRunning ? "Pause" : "Unpause";
+   }
+   async function handleGameOver() {
+       document.getElementById("score_div").innerHTML = 
+        `Game Over! Your score is ${score}`;
+       setScore(0);
+       await new Promise(r => setTimeout(r, 1000));
+       window.location.reload();
    }
    const moveSnake = () => {
+     if(gameState == "PAUSED") return;
+     var expected_tail = snake.tail;
+     while(expected_tail.prev != null) {
+           expected_tail = expected_tail.prev;
+     }
+     snake.tail = expected_tail;
      const currHeadRow = snake.head.row;
      const currHeadCol = snake.head.col;
      var nextHeadRow = currHeadRow;
@@ -141,80 +181,66 @@ export default function Board() {
         }
     }
      const newBoard = board.slice();
-     /*
+     //the snake moves every time, so clear board of previous green nodes 
      for(const snakeCell of snakeCells) {
          // alert(Math.floor(snakeCell / BOARD_SIZE));
       newBoard[Math.floor(snakeCell / BOARD_SIZE)][snakeCell % BOARD_SIZE].isSnakeCell 
         = false;
      }
-     */
-    //the snake moves every time, so clear board of previous green nodes 
-     for(let r=0;r<BOARD_SIZE;r++) {
-         for(let c=0;c<BOARD_SIZE;c++) {
-             newBoard[r][c].isSnakeCell = false;
-         }
-     }
      // moving the snake to the next direction
-     // alert(snake.toString());
      const newSnake = new Snake(nextHeadRow,nextHeadCol);
      var currSnakeNode = newSnake.head;
      var previousSnakeNode = snake.head;
-     //if(previousSnakeNode.prev != null) alert(previousSnakeNode.prev.toString());
+     // if(previousSnakeNode.prev != null) alert(previousSnakeNode.prev.toString());
      while(previousSnakeNode.prev != null) {
          currSnakeNode.prev = new SnakeNode(previousSnakeNode.row,previousSnakeNode.col);
          previousSnakeNode = previousSnakeNode.prev;
          currSnakeNode = currSnakeNode.prev;
      }
-     // based on snake, add the snake cells
-     // alert(nextHeadCol);
-     // alert(nextHeadRow);
-     /*
-     var cheat = new SnakeNode(nextHeadRow,nextHeadCol-1);
-     newSnakeNode.prev = cheat;
-     cheat.next = newSnakeNode;
-     newSnake.tail = cheat;
-     */
-     // alert(newSnake.toString());
+     setSnake(newSnake);
      var newSnakePointer = newSnake.head;
      const newSnakeCells = new Set();
      while(newSnakePointer != null) {
          const id = convertToId(newSnakePointer.row,newSnakePointer.col);
+         if(newSnakeCells.has(id)) {
+             handleGameOver();
+             return;
+         }
          newSnakeCells.add(id);
          newSnakePointer = newSnakePointer.prev;
      }
      for(const snakeCell of newSnakeCells) {
-          // alert(snakeCell);
-          // alert(newSnakeCells.size);
         newBoard[Math.floor(snakeCell/BOARD_SIZE)][snakeCell % BOARD_SIZE].isSnakeCell 
         = true;
      }
-     // alert(newSnake.head.row);
      if(board[nextHeadRow][nextHeadCol].isFoodCell) {
          setScore(score+1);
          growSnake();
-         // alert('grow snake');
+         randomlySpawnFoodCell();
          newBoard[nextHeadRow][nextHeadCol].isFoodCell = false;
          for(const snakeCell of snakeCells) {
-          //alert(Math.floor(snakeCell / BOARD_SIZE));
-          //alert(snakeCell % BOARD_SIZE);
          newBoard[Math.floor(snakeCell / BOARD_SIZE)][snakeCell % BOARD_SIZE].isSnakeCell 
            = true;
-        }
-        // alert(newSnake.toString());
-        setBoard(newBoard);
-        // setSnake(newSnake);
-        setSnakeCells(newSnakeCells);
-        randomlySpawnFoodCell();
-        return;
+         }
+         setBoard(newBoard);
+         setSnakeCells(newSnakeCells);
      }
-     setBoard(newBoard);
-     setSnake(newSnake);
-     setSnakeCells(newSnakeCells);
+     else {
+       setBoard(newBoard);
+       setSnake(newSnake);
+       setSnakeCells(newSnakeCells);
+     }
    };
     return ( 
         <div>
-            <div className="score-header">
-                <h1> Score : {score} </h1>
+            <div style={{display:"block",textAlign:"center"}}>
+              <div>
+                <h1 id="score_div"> Score : {score} 
+                 <Button id="pause-button" style={{textTransform:"none",fontSize:"large"}} size="large" onClick={()=>togglePauseButton()}> 
+                    Pause 
+                 </Button>
+                </h1>
+              </div>
             </div>
         <div className="board">
             {
@@ -288,3 +314,4 @@ function getClassName(cell) {
     }
     return 'cell';
 } 
+
