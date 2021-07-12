@@ -77,13 +77,13 @@ export default function Board() {
        const newSnake = snake;
        const currTail = newSnake.tail;
        var newTail = null;
-       if(direction == Direction.UP) {
+       if(direction === Direction.UP) {
           newTail = new SnakeNode(currTail.row+1,currTail.col);
        }
-       else if(direction == Direction.DOWN) {
+       else if(direction === Direction.DOWN) {
           newTail = new SnakeNode(currTail.row-1,currTail.col);
        }
-       else if(direction == Direction.LEFT) {
+       else if(direction === Direction.LEFT) {
           newTail = new SnakeNode(currTail.row,currTail.col+1);
        }
        else {
@@ -100,9 +100,7 @@ export default function Board() {
        // alert(newSnake.tail.toString());
        setSnake(newSnake);
    }
-   const snakeAteItself = (nextHeadRow,nextHeadCol) => {
-      
-   }
+
    const changeDirectionOptionally = () => {
      document.onkeydown = function (event) {
         switch (event.keyCode) {
@@ -118,11 +116,13 @@ export default function Board() {
            case 40:
              setDirection(Direction.DOWN);
               break;
+            default:
+                break;
         }
      };
    }
    const togglePauseButton = () => {
-       var isRunning = gameState == "RUNNING";
+       var isRunning = gameState === "RUNNING";
        if(isRunning) {
            isRunning = false;
            setGameState("PAUSED");
@@ -140,7 +140,7 @@ export default function Board() {
        window.location.reload();
    }
    const moveSnake = () => {
-     if(gameState == "PAUSED") return;
+     if(gameState === "PAUSED") return;
      var expected_tail = snake.tail;
      while(expected_tail.prev != null) {
            expected_tail = expected_tail.prev;
@@ -152,30 +152,30 @@ export default function Board() {
      var nextHeadCol = currHeadCol;
      changeDirectionOptionally();
      //if direction is right, incr col by 1
-     if(direction == Direction.RIGHT) {
+     if(direction === Direction.RIGHT) {
          nextHeadCol++;
-         if(nextHeadCol == BOARD_SIZE) {
+         if(nextHeadCol === BOARD_SIZE) {
              handleGameOver();
              return;
          }
      }
-     if(direction == Direction.LEFT) {
+     if(direction === Direction.LEFT) {
         nextHeadCol--;
         if(nextHeadCol < 0) {
             handleGameOver();
             return;
         }
     }
-    if(direction == Direction.UP) {
+    if(direction === Direction.UP) {
         nextHeadRow--;
         if(nextHeadRow < 0) {
             handleGameOver();
             return;
         }
     }
-    if(direction == Direction.DOWN) {
+    if(direction === Direction.DOWN) {
         nextHeadRow++;
-        if(nextHeadRow == BOARD_SIZE) {
+        if(nextHeadRow === BOARD_SIZE) {
             handleGameOver();
             return;
         }
@@ -272,8 +272,8 @@ function createBoard() {
             const cell = {
                 row: r,
                 col: c,
-                isSnakeCell: r == STARTING_SNAKE_ROW && c == STARTING_SNAKE_COL,
-                isFoodCell: r == STARTING_FOOD_ROW && c == STARTING_FOOD_COL,
+                isSnakeCell: r === STARTING_SNAKE_ROW && c === STARTING_SNAKE_COL,
+                isFoodCell: r === STARTING_FOOD_ROW && c === STARTING_FOOD_COL,
             };
             row.push(cell);
         }
