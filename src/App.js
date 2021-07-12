@@ -73,18 +73,16 @@ export default function Board() {
    }
    const growSnake = () => {
        const newSnake = snake;
-       if(direction == Direction.RIGHT) {
-           const new_tail = new SnakeNode(newSnake.tail.row,newSnake.tail.col);
-           newSnake.tail.prev = new_tail;
-           newSnake.tail = new_tail;
-           //alert(newSnake.tail == newSnake.head); //false
-           const newSnakeCells = new Set(snakeCells);
-           // alert(convertToId(new_tail.row,new_tail.col));
-           newSnakeCells.add(convertToId(new_tail.row,new_tail.col));
-           setSnakeCells(newSnakeCells);
-           setSnake(newSnake);
-       }
-       // alert(newSnake.toString());
+       const new_tail = new SnakeNode(newSnake.tail.row,newSnake.tail.col);
+       newSnake.tail.prev = new_tail;
+       newSnake.tail = new_tail;
+        //alert(newSnake.tail == newSnake.head); //false
+        const newSnakeCells = new Set(snakeCells);
+        // alert(convertToId(new_tail.row,new_tail.col));
+        newSnakeCells.add(convertToId(new_tail.row,new_tail.col));
+        setSnakeCells(newSnakeCells);
+        setSnake(newSnake);
+        // alert(newSnake.toString());
    }
    const changeDirectionOptionally = () => {
      document.onkeydown = function (event) {
@@ -206,13 +204,13 @@ export default function Board() {
         setBoard(newBoard);
         // setSnake(newSnake);
         setSnakeCells(newSnakeCells);
+        randomlySpawnFoodCell();
         return;
      }
      setBoard(newBoard);
      setSnake(newSnake);
      setSnakeCells(newSnakeCells);
    };
-
     return ( 
         <div>
             <div className="score-header">
