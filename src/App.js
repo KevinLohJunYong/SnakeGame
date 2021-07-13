@@ -265,7 +265,7 @@ export default function Board() {
                  <IconButton className={classes.icon} style={{marginLeft:getMarginLeft()}} onClick={()=>setDirection(Direction.UP)}>
                    <ArrowDropUp fontSize="large"> </ArrowDropUp>
                  </IconButton>
-                <div style={{marginTop:"-4%"}}>
+                <div style={{marginTop:getMarginTopForArrowLeftAndRight()}}>
                 <IconButton className={classes.icon} onClick={()=>setDirection(Direction.LEFT)}>
                   <ArrowLeft fontSize="large"> </ArrowLeft>
                   </IconButton>
@@ -351,9 +351,12 @@ function getClassName(cell) {
     return 'cell';
 } 
 function getMarginTop() {
-    return IS_SMALL_SCREEN ? "0.5%" : "9%";
+    return IS_SMALL_SCREEN ? "0%" : "9%";
 }
 function getMarginLeft() {
     return IS_SMALL_SCREEN ? "7.5%" : "4.5%";
+}
+function getMarginTopForArrowLeftAndRight() {
+    return IS_SMALL_SCREEN ? "-5%" : "-4%";
 }
 
