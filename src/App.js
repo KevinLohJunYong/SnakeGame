@@ -1,12 +1,18 @@
 import React, { useState,useEffect,useRef } from 'react';
 import Button from '@material-ui/core/Button';
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUp from '@material-ui/icons/ArrowDropUp';
+import ArrowLeft from '@material-ui/icons/ArrowLeft';
+import ArrowRight from '@material-ui/icons/ArrowRight';
+import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
 
-const BOARD_SIZE = 15;
-const STARTING_SNAKE_ROW = 3;
-const STARTING_SNAKE_COL = 3;
-const STARTING_FOOD_ROW = 3;
-const STARTING_FOOD_COL = 12;
+const BOARD_SIZE = window.screen.width <= 500 ? 10 : 15;
+const STARTING_SNAKE_ROW = window.screen.width <= 500 ? 2 : 3;
+const STARTING_SNAKE_COL = window.screen.width <= 500 ? 2 : 3;
+const STARTING_FOOD_ROW = window.screen.width <= 500 ? 2 : 3;
+const STARTING_FOOD_COL = window.screen.width <= 500 ? 7 : 11;
 
 class SnakeNode {
    constructor(row,col) {
@@ -47,8 +53,15 @@ const Direction = {
     LEFT: 'LEFT',
     RIGHT: 'RIGHT',
 };
-
+const useStyles = makeStyles((theme) => ({
+    icon: {
+      '& svg': {
+        fontSize: 100
+      }
+    },
+  }));
 export default function Board() {
+    const classes = useStyles();
     const [board,setBoard] = useState(createBoard());
     var [snake,setSnake] = useState(new Snake(STARTING_SNAKE_ROW,STARTING_SNAKE_COL));
     const [snakeCells,setSnakeCells] = useState(new Set([STARTING_SNAKE_ROW*BOARD_SIZE+STARTING_SNAKE_COL]));
@@ -241,6 +254,23 @@ export default function Board() {
                  </Button>
                 </h1>
               </div>
+            </div>
+            <div style={{marginLeft:"9%",marginTop:"9%"}}>
+                 <IconButton className={classes.icon} style={{marginLeft:"4.5%"}} onClick={()=>setDirection(Direction.UP)}>
+                   <ArrowDropUp fontSize="large"> </ArrowDropUp>
+                 </IconButton>
+                <div style={{marginTop:"-1%",marginTop:"-4%"}}>
+                <IconButton className={classes.icon} onClick={()=>setDirection(Direction.LEFT)}>
+                  <ArrowLeft fontSize="large"> </ArrowLeft>
+                  </IconButton>
+                  <IconButton className={classes.icon} onClick={()=>setDirection(Direction.RIGHT)}>
+                  <ArrowRight fontSize="large"> </ArrowRight>
+                  </IconButton>
+                </div>
+                <IconButton className={classes.icon} style={{marginLeft:"4.5%",marginTop:"-4%"}} onClick={()=>setDirection(Direction.DOWN)}>
+                <ArrowDropDown fontSize="large"> 
+                </ArrowDropDown>
+                </IconButton>
             </div>
         <div className="board">
             {
