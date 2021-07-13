@@ -353,12 +353,12 @@ function getClassName(cell) {
     return 'cell';
 } 
 function getMarginTop() {
-    return IS_SMALL_SCREEN ? "-1%" : "9%";
+    return IS_SMALL_SCREEN ? "-2%" : "9%";
 }
 function getMarginLeft() {
     return IS_SMALL_SCREEN ? "8%" : "4.5%";
 }
 function getMarginTopForArrowLeftAndRight() {
-    return IS_SMALL_SCREEN ? "-5%" : "-4%";
+    return IS_SMALL_SCREEN ? "-6%" : "-4%";
 }
 
