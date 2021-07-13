@@ -256,7 +256,7 @@ export default function Board() {
               </div>
             </div>
             <div style={{marginLeft:"9%",marginTop:getMarginTop()}}>
-                 <IconButton className={classes.icon} style={{marginLeft:"4.5%"}} onClick={()=>setDirection(Direction.UP)}>
+                 <IconButton className={classes.icon} style={{marginLeft:getMarginLeft()}} onClick={()=>setDirection(Direction.UP)}>
                    <ArrowDropUp fontSize="large"> </ArrowDropUp>
                  </IconButton>
                 <div style={{marginTop:"-4%"}}>
@@ -267,7 +267,7 @@ export default function Board() {
                   <ArrowRight fontSize="large"> </ArrowRight>
                   </IconButton>
                 </div>
-                <IconButton className={classes.icon} style={{marginLeft:"4.5%",marginTop:"-4%"}} onClick={()=>setDirection(Direction.DOWN)}>
+                <IconButton className={classes.icon} style={{marginLeft:getMarginLeft(),marginTop:"-4%"}} onClick={()=>setDirection(Direction.DOWN)}>
                 <ArrowDropDown fontSize="large"> 
                 </ArrowDropDown>
                 </IconButton>
@@ -345,6 +345,9 @@ function getClassName(cell) {
     return 'cell';
 } 
 function getMarginTop() {
-    return IS_SMALL_SCREEN ? "4%" : "9%";
+    return IS_SMALL_SCREEN ? "2.5%" : "9%";
+}
+function getMarginLeft() {
+    return IS_SMALL_SCREEN ? "6%" : "4.5%";
 }
 
