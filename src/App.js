@@ -7,12 +7,12 @@ import ArrowRight from '@material-ui/icons/ArrowRight';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
-
-const BOARD_SIZE = window.screen.width <= 1600 ? 9 : 15;
-const STARTING_SNAKE_ROW = window.screen.width <= 1600 ? 2 : 3;
-const STARTING_SNAKE_COL = window.screen.width <= 1600 ? 2 : 3;
-const STARTING_FOOD_ROW = window.screen.width <= 1600 ? 2 : 3;
-const STARTING_FOOD_COL = window.screen.width <= 1600 ? 6 : 11;
+const IS_SMALL_SCREEN = window.screen.width <= 1000;
+const BOARD_SIZE = IS_SMALL_SCREEN ? 9 : 15;
+const STARTING_SNAKE_ROW = IS_SMALL_SCREEN ? 2 : 3;
+const STARTING_SNAKE_COL = IS_SMALL_SCREEN ? 2 : 3;
+const STARTING_FOOD_ROW = IS_SMALL_SCREEN ? 2 : 3;
+const STARTING_FOOD_COL = IS_SMALL_SCREEN ? 6 : 11;
 
 class SnakeNode {
    constructor(row,col) {
@@ -255,7 +255,7 @@ export default function Board() {
                 </h1>
               </div>
             </div>
-            <div style={{marginLeft:"9%",marginTop:"9%"}}>
+            <div style={{marginLeft:"9%",marginTop:getMarginTop()}}>
                  <IconButton className={classes.icon} style={{marginLeft:"4.5%"}} onClick={()=>setDirection(Direction.UP)}>
                    <ArrowDropUp fontSize="large"> </ArrowDropUp>
                  </IconButton>
@@ -344,4 +344,7 @@ function getClassName(cell) {
     }
     return 'cell';
 } 
+function getMarginTop() {
+    return IS_SMALL_SCREEN ? "4%" : "9%";
+}
 
