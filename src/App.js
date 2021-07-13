@@ -351,9 +351,9 @@ function getClassName(cell) {
     return 'cell';
 } 
 function getMarginTop() {
-    return IS_SMALL_SCREEN ? "2.5%" : "9%";
+    return IS_SMALL_SCREEN ? "1.5%" : "9%";
 }
 function getMarginLeft() {
-    return IS_SMALL_SCREEN ? "6%" : "4.5%";
+    return IS_SMALL_SCREEN ? "7%" : "4.5%";
 }
 
