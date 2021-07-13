@@ -273,7 +273,9 @@ export default function Board() {
                   <ArrowRight fontSize="large"> </ArrowRight>
                   </IconButton>
                 </div>
-                <IconButton className={classes.icon} style={{marginLeft:getMarginLeft(),getMarginTopForArrowLeftAndRight()}} onClick={()=>setDirection(Direction.DOWN)}>
+                <IconButton className={classes.icon} 
+                style={{marginLeft:getMarginLeft(),marginTop:getMarginTopForArrowLeftAndRight()}}
+                 onClick={()=>setDirection(Direction.DOWN)}>
                 <ArrowDropDown fontSize="large"> 
                 </ArrowDropDown>
                 </IconButton>
