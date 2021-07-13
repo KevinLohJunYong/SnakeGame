@@ -259,7 +259,7 @@ export default function Board() {
                  <IconButton className={classes.icon} style={{marginLeft:"4.5%"}} onClick={()=>setDirection(Direction.UP)}>
                    <ArrowDropUp fontSize="large"> </ArrowDropUp>
                  </IconButton>
-                <div style={{marginTop:"-1%",marginTop:"-4%"}}>
+                <div style={{marginTop:"-4%"}}>
                 <IconButton className={classes.icon} onClick={()=>setDirection(Direction.LEFT)}>
                   <ArrowLeft fontSize="large"> </ArrowLeft>
                   </IconButton>
