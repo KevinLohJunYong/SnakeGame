@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
 const IS_SMALL_SCREEN = window.screen.width <= 1000;
-const IS_REALLY_SMALL_SCREEN = window.screen.width <= 200;
+const IS_REALLY_SMALL_SCREEN = window.screen.width <= 500;
 const BOARD_SIZE = IS_SMALL_SCREEN ? 9 : 15;
 const STARTING_SNAKE_ROW = IS_SMALL_SCREEN ? 2 : 3;
 const STARTING_SNAKE_COL = IS_SMALL_SCREEN ? 2 : 3;
@@ -69,6 +69,7 @@ export default function Board() {
     const [direction,setDirection] = useState(Direction.RIGHT);
     const [score,setScore] = useState(0);
     const [gameState,setGameState] = useState("RUNNING");
+    const [hasAlerted,setHasAlerted] = useState(false);
     //to implement useEffect
    useInterval(() => {
      moveSnake();
@@ -154,11 +155,11 @@ export default function Board() {
        window.location.reload();
    }
    const moveSnake = () => {
-       alert(window.screen.width);
      if(gameState === "PAUSED") return;
-     if(IS_REALLY_SMALL_SCREEN) {
-       alert('It looks like your screen is a bit small, consider rotating your screen or using a computer for a better experience! :D')
-     }
+     if(IS_REALLY_SMALL_SCREEN && !hasAlerted) {
+        alert('It looks like your screen is a bit small, consider rotating your screen or using a computer for a better experience! :D')
+        setHasAlerted(true);
+    }
      var expected_tail = snake.tail;
      while(expected_tail.prev != null) {
            expected_tail = expected_tail.prev;
