@@ -353,7 +353,7 @@ function getClassName(cell) {
     return 'cell';
 } 
 function getMarginTop() {
-    return IS_SMALL_SCREEN ? "0%" : "9%";
+    return IS_SMALL_SCREEN ? "-1%" : "9%";
 }
 function getMarginLeft() {
     return IS_SMALL_SCREEN ? "8%" : "4.5%";
