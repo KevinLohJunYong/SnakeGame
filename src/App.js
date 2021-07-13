@@ -8,11 +8,11 @@ import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
 
-const BOARD_SIZE = window.screen.width <= 500 ? 9 : 15;
-const STARTING_SNAKE_ROW = window.screen.width <= 500 ? 2 : 3;
-const STARTING_SNAKE_COL = window.screen.width <= 500 ? 2 : 3;
-const STARTING_FOOD_ROW = window.screen.width <= 500 ? 2 : 3;
-const STARTING_FOOD_COL = window.screen.width <= 500 ? 6 : 11;
+const BOARD_SIZE = window.screen.width <= 500 ? 7 : 15;
+const STARTING_SNAKE_ROW = window.screen.width <= 500 ? 1 : 3;
+const STARTING_SNAKE_COL = window.screen.width <= 500 ? 1 : 3;
+const STARTING_FOOD_ROW = window.screen.width <= 500 ? 1 : 3;
+const STARTING_FOOD_COL = window.screen.width <= 500 ? 5 : 11;
 
 class SnakeNode {
    constructor(row,col) {
